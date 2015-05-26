@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+
+<project name="aparapi" default="build" basedir=".">
+   <property environment="env" />
+
+   <condition property="x86_or_x86_64" value="x86" else="x86_64"> <or><os arch="x86" /><os arch="i386"/></or> </condition>
+    <condition property="dist-suffix" value="windows_${x86_or_x86_64}"><os family="windows" /></condition>
+   <condition property="dist-suffix" value="linux_${x86_or_x86_64}"><and><not><os family="mac"/></not><os family="unix" /></and></condition>	
+   <condition property="dist-suffix" value="MacOSX"><os family="mac" /></condition>
+
+   <tstamp>
+      <format property="current.time" pattern="yyyy_MM_dd" />
+   </tstamp>
+   <property name="dist-dir" value="Aparapi_${current.time}_${dist-suffix}" />
+   <property name="dist-zip" value="${dist-dir}.zip" />
+
+   <target name="help">
+      <echo>
+        Available targets are:-
+          clean
+               Clean the com.amd.aparapi and com.amd.aparapi.jni subdirs.
+          build
+               Build the com.amd.aparapi and com.amd.aparapi.jni artifacts and samples
+          samples
+               Build the com.amd.aparapi and com.amd.aparapi.jni artifacts, samples
+          test
+               Build and execute the test code.
+          dist
+               Create ${dist-dir} dir
+                  Populate with
+                     aparapi.jar
+                     aparapi-agent .so/dlls
+                     javadoc
+                     samples
+               Copy the samples (source and binaries) into ${dist-dir}/samples
+               Create ${dist-zip}
+      </echo>
+   </target>
+
+
+   <target name="clean">
+      <delete dir="${dist-dir}"/>
+      <delete file="${dist-zip}"/>
+      <subant target="clean">
+         <fileset dir="samples" includes="*/build.xml"/>
+         <fileset dir="test" includes="*/build.xml"/>
+      </subant>
+      <delete file="test\codegen\.libs\junit-4.10.jar"/> <!-- we handle the junit delete here, save downloading each build -->
+      <delete file="test\hsailtest\.libs\junit-4.10.jar"/> <!-- we handle the junit delete here, save downloading each build -->
+      <ant dir="com.amd.aparapi.jni" target="clean"/> 
+      <ant dir="com.amd.aparapi" target="clean"/> 
+   </target>
+
+   <target name="build" depends="clean">
+      <!-- Build the two aparapi dirs -->
+      <ant dir="com.amd.aparapi" target="build"/> 
+      <ant dir="com.amd.aparapi.jni" target="build"/> 
+      <subant target="build">
+         <fileset dir="samples" includes="*/build.xml"/>
+      </subant>
+   </target>
+
+   <target name="samples" depends="build">
+      <subant target="build">
+         <fileset dir="samples" includes="*/build.xml"/>
+      </subant>
+   </target>
+
+   <target name="test" depends="build">
+      <subant target="junit">
+         <fileset dir="test" includes="*/build.xml"/>
+      </subant>
+   </target>
+
+   <target name="dist" depends="build">
+      <!-- Create the dist dir for the current arch and bitness -->
+      <mkdir dir="${dist-dir}"/>
+
+      <!-- Copy the license dist -->
+      <copy todir="${dist-dir}" file="LICENSE.TXT"/>
+
+      <!-- Copy the env files -->
+      <copy todir="${dist-dir}" file="env.bat"/>
+      <copy todir="${dist-dir}" file="env.sh"/>
+
+      <!-- Copy aparapi.jar to dist -->
+      <copy todir="${dist-dir}" file="com.amd.aparapi/dist/aparapi.jar"/>
+
+      <!-- Create javadoc in dist -->
+      <javadoc packagenames="com.amd.aparapi.*" access="public" destdir="${dist-dir}/api" >
+         <fileset dir="com.amd.aparapi/src/java" defaultexcludes="yes"/>
+      </javadoc>
+
+      <!-- Copy aparapi shared lib to dist -->
+      <copy todir="${dist-dir}">
+         <fileset dir="com.amd.aparapi.jni/dist" includes="**.dll,**.so,**.dylib" />
+      </copy>
+
+      <mkdir dir="${dist-dir}/samples"/>
+      <copy todir="${dist-dir}/samples">
+         <fileset dir="samples"/>
+      </copy>
+
+      <zip destfile="${dist-zip}" basedir="${dist-dir}" />
+
+   </target>
+
+
+</project>

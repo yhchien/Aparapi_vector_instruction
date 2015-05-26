@@ -1,0 +1,156 @@
+ Datasize is513
+version 0:95: $full : $large;
+kernel &run(
+    align 8  kernarg_s32 %_arg0, 
+    align 8  kernarg_u64 %_arg1, 
+    align 8  kernarg_s32 %_arg2
+   ){
+         ld_kernarg_s32 $s0, [%_arg0];
+         ld_kernarg_u64 $d1, [%_arg1];
+         ld_kernarg_s32 $s2, [%_arg2];
+         workitemabsid_s32 $s3, 0;
+
+ // 0000_0000 iload_2  var#2(i_2 I)
+         add_s32 $s2, $s2, $s3;
+         mov_b32 $s8, $s2;
+
+ // 0000_0001 iload_0  var#0(i_0 I)
+         mov_b32 $s9, $s0;
+
+ // 0000_0002 idiv    
+         div_s32 $s8, $s8, $s9;
+
+ // 0000_0003 istore_3 var#3(i_3 ref type)
+         mov_b32 $s3, $s8;
+
+ // 0000_0004 iload_2  var#2(i_2 I)
+         mov_b32 $s8, $s2;
+
+ // 0000_0005 iload_0  var#0(i_0 I)
+         mov_b32 $s9, $s0;
+
+ // 0000_0006 irem    
+         rem_s32 $s8, $s8, $s9;
+
+ // 0000_0007 istore   var#4(i_4 ref type)
+         mov_b32 $s4, $s8;
+
+ // 0000_0009 iconst_0.0
+         mov_b32 $s8, 0;
+
+ // 0000_0010 istore   var#5(i_5 ref type)
+         mov_b32 $s5, $s8;
+@L0000_0012:
+ // 0000_0012 iload    var#5(i_5 ref type)
+         mov_b32 $s8, $s5;
+
+ // 0000_0014 iload_0  var#0(i_0 I)
+         mov_b32 $s9, $s0;
+
+ // 0000_0015 if_icmpge 59
+         cmp_ge_b1_s32 $c1, $s8, $s9;
+         cbr $c1, @L0000_0059;
+
+ // 0000_0018 iload_3  var#3(i_3 ref type)
+         mov_b32 $s8, $s3;
+
+ // 0000_0019 iload_0  var#0(i_0 I)
+         mov_b32 $s9, $s0;
+
+ // 0000_0020 imul    
+         mul_s32 $s8, $s8, $s9;
+
+ // 0000_0021 iload    var#5(i_5 ref type)
+         mov_b32 $s9, $s5;
+
+ // 0000_0023 iadd    
+         add_s32 $s8, $s8, $s9;
+
+ // 0000_0024 istore   var#6(i_6 ref type)
+         mov_b32 $s6, $s8;
+
+ // 0000_0026 iload    var#5(i_5 ref type)
+         mov_b32 $s8, $s5;
+
+ // 0000_0028 iload_0  var#0(i_0 I)
+         mov_b32 $s9, $s0;
+
+ // 0000_0029 imul    
+         mul_s32 $s8, $s8, $s9;
+
+ // 0000_0030 iload    var#4(i_4 ref type)
+         mov_b32 $s9, $s4;
+
+ // 0000_0032 iadd    
+         add_s32 $s8, $s8, $s9;
+
+ // 0000_0033 istore   var#7(i_7 ref type)
+         mov_b32 $s7, $s8;
+
+ // 0000_0035 aload_1  var#1(oref_1 [I)
+         mov_b64 $d8, $d1;
+
+ // 0000_0036 iload_2  var#2(i_2 I)
+         mov_b32 $s9, $s2;
+
+ // 0000_0037 aload_1  var#1(oref_1 [I)
+         mov_b64 $d10, $d1;
+
+ // 0000_0038 iload_2  var#2(i_2 I)
+         mov_b32 $s11, $s2;
+
+ // 0000_0039 iaload  
+         cvt_u64_s32 $d11, $s11;
+         mad_u64 $d11, $d11, 4, $d10;
+         ld_global_s32 $s10, [$d11+24];
+
+ // 0000_0040 aload_1  var#1(oref_1 [I)
+         mov_b64 $d11, $d1;
+
+ // 0000_0041 iload    var#6(i_6 ref type)
+         mov_b32 $s12, $s6;
+
+ // 0000_0043 iaload  
+         cvt_u64_s32 $d12, $s12;
+         mad_u64 $d12, $d12, 4, $d11;
+         ld_global_s32 $s11, [$d12+24];
+
+ // 0000_0044 aload_1  var#1(oref_1 [I)
+         mov_b64 $d12, $d1;
+
+ // 0000_0045 iload    var#7(i_7 ref type)
+         mov_b32 $s13, $s7;
+
+ // 0000_0047 iaload  
+         cvt_u64_s32 $d13, $s13;
+         mad_u64 $d13, $d13, 4, $d12;
+         ld_global_s32 $s12, [$d13+24];
+
+ // 0000_0048 iadd    
+         add_s32 $s11, $s11, $s12;
+
+ // 0000_0049 invokestatic I java.lang.Math.min
+         cmp_ge_b1_s32 $c1, $s10, $s11;
+         cmov_b32 $s10, $c1, $s11, $s10;
+
+ // 0000_0052 iastore 
+         cvt_u64_s32 $d9, $s9;
+         mad_u64 $d9, $d9, 4, $d8;
+         st_global_s32 $s10, [$d9+24];
+
+ // 0000_0053 iinc     var#5(i_5 ref type)
+         add_s32 $s5, $s5, 1;
+
+ // 0000_0056 goto     12
+         brn @L0000_0012;
+@L0000_0059:
+ // 0000_0059 return  
+         ret;
+};
+/*
+0000={
+     0000 -> com.amd.aparapi.sample.Floyd.MainHSAIL.lambda$getDistanceIterative$0(I[II)V
+}
+
+*/
+334 s 

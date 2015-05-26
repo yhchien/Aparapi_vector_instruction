@@ -1,0 +1,308 @@
+<?xml version="1.0"?>
+
+<!--
+You should not have to edit this file
+First consider editing the properties in build.properties
+-->
+<project name="com.amd.aparapi.jni" default="build" basedir=".">
+
+   <!-- 
+   DO NOT EDIT BELOW THIS LINE 
+   -->
+   <property environment="env" />
+   <echo>OS Name:     ${os.name}</echo>
+   <echo>OS Version:  ${os.version}</echo>
+   <echo>OS Arch:     ${os.arch}</echo>
+   <echo>LOGNAME:     ${env.LOGNAME}</echo>
+   <echo>OCL_LIB:     ${env.OCL_LIB}</echo>
+   <echo>OCL_INCLUDE: ${env.OCL_INCLUDE}</echo>
+   <echo>JAVA_HOME:   ${env.JAVA_HOME}</echo>
+
+   <target name="init">
+
+      <available property="ocl_lib.exists" file="${env.OCL_LIB}" type="dir"/>
+      <available property="ocl_include.exists" file="${env.OCL_INCLUDE}" type="dir"/>
+      <fail message="Error:">
+         <condition>
+            <and>
+               <not><isset property="ocl_lib.exists" /></not>
+               <not><isset property="ocl_include.exists" /></not>
+               <not> <os family="mac" /> </not>
+            </and>
+         </condition>
+         <![CDATA[
+         You will need to set OCL_LIB and OCL_INCLUDE environment var to compile aparapi JNI code
+         ]]>
+      </fail>
+   </target>
+
+   <target name="check" depends="init">
+
+      <!--<echo message="java.home ${java.home}"/>-->
+      <!--<echo message="msvc.dir.exists ${msvc.dir.exists}"/>-->
+      <!--<echo message="msvc.sdk.dir.exists ${msvc.sdk.dir.exists}"/>-->
+      <!--<echo message="mingw.dir.exists ${mingw.dir.exists}"/>-->
+
+      <condition property="use.gcc">
+         <and>
+            <os family="unix" />
+            <not>
+               <os family="mac" />
+            </not>
+         </and>
+      </condition>
+
+      <condition property="use.gcc_mac">
+         <os family="mac" />
+      </condition>
+
+      <condition property="x86_or_x86_64" value="x86" else="x86_64">
+         <or>
+            <os arch="x86" />
+            <os arch="i386" />
+         </or>
+      </condition>
+
+      <condition property="optional.amd64.subdir" value="" else="amd64\">
+         <or>
+            <os arch="x86" />
+            <os arch="i386" />
+         </or>
+      </condition>
+
+      <condition property="optional.x64.subdir" value="" else="x64\">
+         <or>
+            <os arch="x86" />
+            <os arch="i386" />
+         </or>
+      </condition>
+
+
+   </target>
+
+   <target name="clean" depends="check">
+      <delete dir="include" />
+      <delete dir="${basedir}/dist" />
+      <!-- Legacy cleanup -->
+      <delete file="libaparapi_${x86_or_x86_64}.dylib" />
+      <delete file="libaparapi_${x86_or_x86_64}.so" />
+      <delete file="aparapi_${x86_or_x86_64}.dll" />
+      <delete file="aparapi.dll" />
+      <delete file="aparapi.obj" />
+      <delete file="aparapi.o" />
+      <delete file="aparapi.lib" />
+      <delete file="aparapi.exp" />
+      <delete file="opencljni.obj" />
+      <delete file="opencljni.o" />
+      <delete file="config.obj" />
+      <delete file="config.o" />
+      <delete file="profileInfo.obj" />
+      <delete file="profileInfo.o" />
+      <delete file="arrayBuffer.obj" />
+      <delete file="arrayBuffer.o" />
+      <delete file="jniHelper.obj" />
+      <delete file="jniHelper.o" />
+      <delete file="clHelper.obj" />
+      <delete file="clHelper.o" />
+   </target>
+
+   <target name="javah">
+      <mkdir dir="include" />
+      <javah classpath="..\com.amd.aparapi\dist\aparapi.jar" destdir="include" force="true">
+         <class name="com.amd.aparapi.OpenCLRunner" />
+         <class name="com.amd.aparapi.LambdaRunner" />
+         <class name="com.amd.aparapi.KernelRunner" />
+         <class name="com.amd.aparapi.OpenCLJNI" />
+         <class name="com.amd.aparapi.OpenCLArgDescriptor" />
+         <class name="com.amd.aparapi.OpenCLMem" />
+      </javah>
+   </target>
+
+   <target name="gcc" if="use.gcc">
+      <mkdir dir="${basedir}/dist"/>
+      <echo message="linuxcc ${os.arch}" />
+      <exec executable="g++">
+         <arg value="-O3" />
+         <arg value="-g" />
+         <arg value="-fPIC" />
+         <arg value="-DCL_USE_DEPRECATED_OPENCL_1_1_APIS"/>
+         <arg value="-I${java.home}/../include" />
+         <arg value="-I${java.home}/../include/linux" />
+         <arg value="-Iinclude" />
+         <arg value="-I${env.OCL_INCLUDE}" />
+         <arg value="-shared" />
+         <arg value="-o" />
+         <arg value="${basedir}/dist/libaparapi_${x86_or_x86_64}.so" />
+         <arg value="src/cpp/aparapi.cpp" />
+         <arg value="src/cpp/config.cpp" />
+         <arg value="src/cpp/profileInfo.cpp" />
+         <arg value="src/cpp/arrayBuffer.cpp" />
+         <arg value="src/cpp/opencljni.cpp" />
+         <arg value="src/cpp/jniHelper.cpp" />
+         <arg value="src/cpp/clHelper.cpp" />
+         <arg value="src/cpp/classtools.cpp" />
+         <arg value="src/cpp/instruction.cpp" />
+         <arg value="src/cpp/agent.cpp" />
+         <arg value="-L${env.OCL_LIB}" />
+         <arg value="-lOpenCL" />
+      </exec>
+   </target>
+
+   <target name="gcc_mac" if="use.gcc_mac">
+      <mkdir dir="${basedir}/dist"/>
+      <echo message="gcc ${os.arch}" />
+      <exec executable="g++">
+         <arg value="-O3" />
+         <arg value="-g" />
+         <arg value="-fPIC" />
+         <arg value="-DCL_USE_DEPRECATED_OPENCL_1_1_APIS"/>
+         <!--<arg value="-I/System/Library/Frameworks/JavaVM.framework/Headers" />-->
+         <arg value="-I/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/include" />
+         <arg value="-I/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/include/darwin" />
+         <arg value="-Iinclude" />
+         <arg value="-shared" />
+         <arg value="-o" />
+         <arg value="${basedir}/dist/libaparapi_${x86_or_x86_64}.dylib" />
+         <arg value="src/cpp/aparapi.cpp" />
+         <arg value="src/cpp/config.cpp" />
+         <arg value="src/cpp/profileInfo.cpp" />
+         <arg value="src/cpp/arrayBuffer.cpp" />
+         <arg value="src/cpp/opencljni.cpp" />
+         <arg value="src/cpp/jniHelper.cpp" />
+         <arg value="src/cpp/clHelper.cpp" />
+         <arg value="src/cpp/classtools.cpp" />
+         <arg value="src/cpp/agent.cpp" />
+         <arg value="-framework" />
+         <arg value="OpenCL" />
+         <arg value="-Wno-write-strings" />
+      </exec>
+   </target>
+
+   <target name="msvc" if="use.msvc">
+      <mkdir dir="${basedir}\dist"/>
+      <echo message="msvc ${os.arch}" />
+      <exec executable="${msvc.dir}\vc\bin\${optional.amd64.subdir}cl.exe">
+         <env key="PATH" path="${env.PATH};${msvc.dir}\\Common7\\IDE" />
+         <arg value="/nologo" />
+         <arg value="/TP" />
+         <arg value="/Ox" />
+         <arg value="/DCL_USE_DEPRECATED_OPENCL_1_1_APIS"/>
+         <arg value="/I${msvc.dir}\vc\include" />
+         <arg value="/I${msvc.sdk.dir}\include" />
+         <arg value="/I${java.home}\..\include" />
+         <arg value="/I${java.home}\..\include\win32" />
+         <arg value="/Iinclude" />
+         <arg value="/IC:\Program Files (x86)\Windows Kits\8.0\Include\shared" />
+         <arg value="/IC:\Program Files (x86)\Windows Kits\8.0\Include\um" />
+
+         <arg value="/I${env.OCL_INCLUDE}" />
+         <arg value="src/cpp/aparapi.cpp" />
+         <arg value="src/cpp/config.cpp" />
+         <arg value="src/cpp/profileInfo.cpp" />
+         <arg value="src/cpp/arrayBuffer.cpp" />
+         <arg value="src/cpp/opencljni.cpp" />
+         <arg value="src/cpp/jniHelper.cpp" />
+         <arg value="src/cpp/clHelper.cpp" />
+         <arg value="src/cpp/classtools.cpp" />
+         <arg value="src/cpp/agent.cpp" />
+         <arg value="/LD" />
+         <arg value="/link" />
+         <arg value="/libpath:${msvc.dir}\vc\lib\${optional.amd64.subdir}" />
+         <arg value="/libpath:${msvc.sdk.dir}\lib\${optional.x64.subdir}" />
+         <arg value="/libpath:${env.OCL_LIB}" />
+         <arg value="/libpath:C:\Program Files (x86)\Windows Kits\8.0\Lib\win8\um\x64" />
+         <arg value="OpenCL.lib" />
+         <arg value="/out:${basedir}\dist\aparapi_${x86_or_x86_64}.dll" />
+      </exec>
+   </target>
+
+   <target name="build" depends="clean, javah, gcc, gcc_mac" />
+
+   <target name="mac_cltest" if="use.gcc_mac">
+      <mkdir dir="${basedir}/dist"/>
+      <echo message="gcc cltest ${os.arch}" />
+      <exec executable="g++">
+         <arg value="-O3" />
+         <arg value="-g" />
+         <arg value="-fPIC" />
+         <arg value="-DCL_USE_DEPRECATED_OPENCL_1_1_APIS"/>
+         <arg value="-I/System/Library/Frameworks/JavaVM.framework/Headers" />
+         <arg value="-Iinclude" />
+         <arg value="src/cpp/cltest.cpp" />
+         <arg value="-framework" />
+         <arg value="OpenCL" />
+         <arg value="-o" />
+         <arg value="${basedir}/cltest_${x86_or_x86_64}" />
+      </exec>
+   </target>
+
+   <target name="gcc_cltest" if="use.gcc">
+      <mkdir dir="${basedir}/dist"/>
+      <echo message="gcc cltest ${os.arch}" />
+      <exec executable="g++">
+         <arg value="-O3" />
+         <arg value="-g" />
+         <arg value="-fPIC" />
+         <arg value="-DCL_USE_DEPRECATED_OPENCL_1_1_APIS"/>
+         <arg value="-I${java.home}/../include" />
+         <arg value="-I${java.home}/../include/linux" />
+         <arg value="-I${env.OCL_INCLUDE}" />
+         <arg value="src/cpp/cltest.cpp" />
+         <arg value="-L${env.OCL_LIB}" />
+         <arg value="-lOpenCL" />
+         <arg value="-o" />
+         <arg value="${basedir}/cltest_${x86_or_x86_64}" />
+      </exec>
+   </target>
+
+   <target name="gcc_clt" if="use.gcc">
+      <mkdir dir="${basedir}/dist"/>
+      <echo message="gcc cltest ${os.arch}" />
+      <exec executable="g++">
+         <arg value="-O3" />
+         <arg value="-g" />
+         <arg value="-fPIC" />
+         <arg value="src/cpp/classtools.cpp" />
+         <arg value="src/cpp/instruction.cpp" />
+         <arg value="src/cpp/classtoolstest.cpp" />
+         <arg value="-o" />
+         <arg value="${basedir}/clt" />
+      </exec>
+   </target>
+
+   <target name="mac_clt" if="use.gcc_mac">
+      <mkdir dir="${basedir}/dist"/>
+      <echo message="gcc clt ${os.arch}" />
+      <exec executable="g++">
+         <arg value="-O3" />
+         <arg value="-g" />
+         <arg value="-fPIC" />
+         <arg value="src/cpp/classtools.cpp" />
+         <arg value="src/cpp/instruction.cpp" />
+         <arg value="src/cpp/classtoolstest.cpp" />
+         <arg value="-o" />
+         <arg value="${basedir}/clt" />
+      </exec>
+   </target>
+
+   <target name="msvc_clt" if="use.msvc">
+      <mkdir dir="${basedir}\dist"/>
+      <echo message="msvc_cltest ${os.arch}" />
+      <exec executable="${msvc.dir}\vc\bin\${optional.amd64.subdir}cl.exe">
+         <env key="PATH" path="${env.PATH};${msvc.dir}\\Common7\\IDE" />
+         <arg value="/nologo" />
+         <arg value="/TP" />
+         <arg value="/I${msvc.dir}\vc\include" />
+         <arg value="/I${msvc.sdk.dir}\include" />
+         <arg value="src\cpp\classtools.cpp" />
+         <arg value="src\cpp\instruction.cpp" />
+         <arg value="src\cpp\classtoolstest.cpp" />
+         <arg value="/link" />
+         <arg value="/libpath:${msvc.dir}\vc\lib\${optional.amd64.subdir}" />
+         <arg value="/libpath:${msvc.sdk.dir}\lib\${optional.x64.subdir}" />
+         <arg value="/out:clt.exe" />
+      </exec>
+   </target>
+   <target name="cltest" depends="check,mac_cltest,gcc_cltest" />
+   <target name="clt" depends="check,gcc_clt,mac_clt" />
+</project>

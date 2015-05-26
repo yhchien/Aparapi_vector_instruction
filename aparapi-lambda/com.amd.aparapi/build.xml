@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+<project name="com.amd.aparapi" default="build" basedir=".">
+   <property environment="env"/>
+
+   <echo>OS Name: ${os.name}</echo>
+   <echo>OS Version: ${os.version}</echo>
+   <echo>OS Arch: ${os.arch}</echo>
+
+   <property name="build.compiler" value="javac1.7"/>
+   <property name="ant.build.javac.source" value="1.8"/>
+   <property name="ant.build.javac.target" value="1.8"/>
+
+   <target name="clean">
+      <delete dir="api"/>
+      <delete dir="classes"/>
+      <delete dir="dist"/>
+      <delete file="aparapi.jar"/>
+   </target>
+
+   <path id="compiler.class.path">
+      <pathelement path="${env.OKRA_HOME}/dist/okra.jar"/>
+      <pathelement path="../mockra/mockra.jar"/> <!-- allows us to build on machines without okra -->
+   </path>
+
+   <target name="build" depends="clean" description="Build Aparapi">
+      <mkdir dir="classes"/>
+      <mkdir dir="dist"/>
+      <javac debug="true"
+         debuglevel="lines,vars,source"
+         srcdir="${basedir}/src/java"
+         destdir="${basedir}/classes"
+         includeantruntime="false">
+         <classpath refid="compiler.class.path"/> 
+      </javac>
+      <jar jarfile="${basedir}/dist/aparapi.jar" basedir="${basedir}/classes"/>
+   </target>
+</project>

@@ -1,0 +1,210 @@
+APARAPI_HOME:/home/hsaserver/aparapi-lambda
+ANT_HOME:/usr/share/ant
+APARAPI_JNI_HOME:
+APARAPI_JAR_HOME:
+JAVA_HOME:/home/hsaserver/jdk1.8.0_20
+OCL_LIB:/home/hsaserver/AMD-APP-SDK-v2.9-RC-lnx64/lib/x86_64
+OCL_INCLUDE:/home/hsaserver/AMD-APP-SDK-v2.9-RC-lnx64/include
+OKRA_HOME:/home/hsaserver/Okra-Interface-to-HSA-Device/okra
+PATH:/home/hsaserver/jdk1.8.0_20/bin:/usr/share/ant/bin:/home/hsaserver/Okra-Interface-to-HSA-Device/okra/dist/bin:/home/hsaserver/Okra-Interface-to-HSA-Device/okra/hsa/bin/x86_64://home/hsaserver/jdk1.8.0_20//bin:/home/hsaserver/okra-Interface-to-HSA-Device/okra/dist/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
+LD_LIBRARY_PATH:/home/hsaserver/Okra-Interface-to-HSA-Device/okra/dist/bin:/home/hsaserver/Okra-Interface-to-HSA-Device/okra/hsa/bin/x86_64:/home/hsaserver/AMD-APP-SDK-v2.9-RC-lnx64/lib/x86_64::/opt/AMDAPP/lib/x86_64:/opt/AMDAPP/lib/x86:/home/hsaserver/Okra-Interface-to-HSA-Device/okra/dist/bin
+LIB_ARCH:x86_64
+LIB_SUFFIX:so
+LIB_PREFIX:lib
+APARAPI_AGENT_NAME=libaparapi_x86_64.so
+HSA_RUNTIME:1
+JVM_OPTS: -Xmx2G -XX:-UseCompressedOops -agentpath:/home/hsaserver/aparapi-lambda/com.amd.aparapi.jni/dist/libaparapi_x86_64.so -Djava.library.path=/home/hsaserver/Okra-Interface-to-HSA-Device/okra/dist/bin:/home/hsaserver/Okra-Interface-to-HSA-Device/okra/hsa/bin/x86_64
+JARS::/home/hsaserver/aparapi-lambda/com.amd.aparapi/dist/aparapi.jar:/home/hsaserver/Okra-Interface-to-HSA-Device/okra/dist/okra.jar
+version 0:95: $full : $large;
+kernel &run(
+    align 8  kernarg_u64 %_arg0, 
+    align 8  kernarg_s32 %_arg1
+   ){
+         ld_kernarg_u64 $d0, [%_arg0];
+         ld_kernarg_s32 $s1, [%_arg1];
+         workitemabsid_s32 $s2, 0;
+
+ // 0000_0000 aload_0  var#0(oref_0 Lcom/amd/aparapi/sample/Matrixmul/MainHSAIL$Matrixmulkernel;)
+         add_s32 $s1, $s1, $s2;
+         mov_b64 $d2, $d0;
+
+ // 0000_0001 iload_1  var#1(i_1 I)
+         mov_b32 $s3, $s1;
+
+ // 0001_0000 iconst_0.0
+         mov_b32 $s7, 0;
+
+ // 0001_0001 istore_2 var#2(i_2 ref type)
+         mov_b32 $s4, $s7;
+@L0001_0002:
+ // 0001_0002 iload_2  var#2(i_2 ref type)
+         mov_b32 $s7, $s4;
+
+ // 0001_0003 aload_0  var#0(oref_0 Lcom/amd/aparapi/sample/Matrixmul/MainHSAIL$Matrixmulkernel;)
+         mov_b64 $d8, $d2;
+
+ // 0001_0004 getfield I com.amd.aparapi.sample.Matrixmul.MainHSAIL$Matrixmulkernel cols2
+         ld_global_s32 $s8, [$d8+24];
+
+ // 0001_0007 if_icmpge 82
+         cmp_ge_b1_s32 $c1, $s7, $s8;
+         cbr $c1, @L0001_0082;
+
+ // 0001_0010 fconst_0.0.0
+         mov_b32 $s7, 0.0f;
+
+ // 0001_0011 fstore_3 var#3(f_3 ref type)
+         mov_b32 $s5, $s7;
+
+ // 0001_0012 iconst_0.0
+         mov_b32 $s7, 0;
+
+ // 0001_0013 istore   var#4(i_4 ref type)
+         mov_b32 $s6, $s7;
+@L0001_0015:
+ // 0001_0015 iload    var#4(i_4 ref type)
+         mov_b32 $s7, $s6;
+
+ // 0001_0017 aload_0  var#0(oref_0 Lcom/amd/aparapi/sample/Matrixmul/MainHSAIL$Matrixmulkernel;)
+         mov_b64 $d8, $d2;
+
+ // 0001_0018 getfield I com.amd.aparapi.sample.Matrixmul.MainHSAIL$Matrixmulkernel cols1
+         ld_global_s32 $s8, [$d8+20];
+
+ // 0001_0021 if_icmpge 62
+         cmp_ge_b1_s32 $c1, $s7, $s8;
+         cbr $c1, @L0001_0062;
+
+ // 0001_0024 fload_3  var#3(f_3 ref type)
+         mov_b32 $s7, $s5;
+
+ // 0001_0025 aload_0  var#0(oref_0 Lcom/amd/aparapi/sample/Matrixmul/MainHSAIL$Matrixmulkernel;)
+         mov_b64 $d8, $d2;
+
+ // 0001_0026 getfield [F com.amd.aparapi.sample.Matrixmul.MainHSAIL$Matrixmulkernel matA
+         ld_global_u64 $d8, [$d8+40];
+
+ // 0001_0029 iload_1  var#1(i_1 I)
+         mov_b32 $s9, $s3;
+
+ // 0001_0030 aload_0  var#0(oref_0 Lcom/amd/aparapi/sample/Matrixmul/MainHSAIL$Matrixmulkernel;)
+         mov_b64 $d10, $d2;
+
+ // 0001_0031 getfield I com.amd.aparapi.sample.Matrixmul.MainHSAIL$Matrixmulkernel cols1
+         ld_global_s32 $s10, [$d10+20];
+
+ // 0001_0034 imul    
+         mul_s32 $s9, $s9, $s10;
+
+ // 0001_0035 iload    var#4(i_4 ref type)
+         mov_b32 $s10, $s6;
+
+ // 0001_0037 iadd    
+         add_s32 $s9, $s9, $s10;
+
+ // 0001_0038 faload  
+         cvt_u64_s32 $d9, $s9;
+         mad_u64 $d9, $d9, 4, $d8;
+         ld_global_f32 $s8, [$d9+24];
+
+ // 0001_0039 aload_0  var#0(oref_0 Lcom/amd/aparapi/sample/Matrixmul/MainHSAIL$Matrixmulkernel;)
+         mov_b64 $d9, $d2;
+
+ // 0001_0040 getfield [F com.amd.aparapi.sample.Matrixmul.MainHSAIL$Matrixmulkernel matB
+         ld_global_u64 $d9, [$d9+48];
+
+ // 0001_0043 iload    var#4(i_4 ref type)
+         mov_b32 $s10, $s6;
+
+ // 0001_0045 aload_0  var#0(oref_0 Lcom/amd/aparapi/sample/Matrixmul/MainHSAIL$Matrixmulkernel;)
+         mov_b64 $d11, $d2;
+
+ // 0001_0046 getfield I com.amd.aparapi.sample.Matrixmul.MainHSAIL$Matrixmulkernel rows
+         ld_global_s32 $s11, [$d11+16];
+
+ // 0001_0049 imul    
+         mul_s32 $s10, $s10, $s11;
+
+ // 0001_0050 iload_2  var#2(i_2 ref type)
+         mov_b32 $s11, $s4;
+
+ // 0001_0051 iadd    
+         add_s32 $s10, $s10, $s11;
+
+ // 0001_0052 faload  
+         cvt_u64_s32 $d10, $s10;
+         mad_u64 $d10, $d10, 4, $d9;
+         ld_global_f32 $s9, [$d10+24];
+
+ // 0001_0053 fmul    
+         mul_f32 $s8, $s8, $s9;
+
+ // 0001_0054 fadd    
+         add_f32 $s7, $s7, $s8;
+
+ // 0001_0055 fstore_3 var#3(f_3 ref type)
+         mov_b32 $s5, $s7;
+
+ // 0001_0056 iinc     var#4(i_4 ref type)
+         add_s32 $s6, $s6, 1;
+
+ // 0001_0059 goto     15
+         brn @L0001_0015;
+@L0001_0062:
+ // 0001_0062 aload_0  var#0(oref_0 Lcom/amd/aparapi/sample/Matrixmul/MainHSAIL$Matrixmulkernel;)
+         mov_b64 $d7, $d2;
+
+ // 0001_0063 getfield [F com.amd.aparapi.sample.Matrixmul.MainHSAIL$Matrixmulkernel matC
+         ld_global_u64 $d7, [$d7+56];
+
+ // 0001_0066 iload_1  var#1(i_1 I)
+         mov_b32 $s8, $s3;
+
+ // 0001_0067 aload_0  var#0(oref_0 Lcom/amd/aparapi/sample/Matrixmul/MainHSAIL$Matrixmulkernel;)
+         mov_b64 $d9, $d2;
+
+ // 0001_0068 getfield I com.amd.aparapi.sample.Matrixmul.MainHSAIL$Matrixmulkernel cols2
+         ld_global_s32 $s9, [$d9+24];
+
+ // 0001_0071 imul    
+         mul_s32 $s8, $s8, $s9;
+
+ // 0001_0072 iload_2  var#2(i_2 ref type)
+         mov_b32 $s9, $s4;
+
+ // 0001_0073 iadd    
+         add_s32 $s8, $s8, $s9;
+
+ // 0001_0074 fload_3  var#3(f_3 ref type)
+         mov_b32 $s9, $s5;
+
+ // 0001_0075 fastore 
+         cvt_u64_s32 $d8, $s8;
+         mad_u64 $d8, $d8, 4, $d7;
+         st_global_f32 $s9, [$d8+24];
+
+ // 0001_0076 iinc     var#2(i_2 ref type)
+         add_s32 $s4, $s4, 1;
+
+ // 0001_0079 goto     2
+         brn @L0001_0002;
+@L0001_0082:
+ // 0001_0082 return  
+         // nop;
+
+ // 0000_0005 return  
+         ret;
+};
+/*
+0000={
+     0000 -> com.amd.aparapi.sample.Matrixmul.MainHSAIL$Matrixmulkernel.lambda$getResult$0(I)V
+}
+
+0001={
+     0000 -> com.amd.aparapi.sample.Matrixmul.MainHSAIL$Matrixmulkernel.lambda$getResult$0(I)V
+     0002 -> com.amd.aparapi.sample.Matrixmul.MainHSAIL$Matrixmulkernel.MatMulCalc(I)V
+}
+
+*/
+over
+Using Time:0.334sec

@@ -1,0 +1,62 @@
+ Datasize is4096
+version 0:95: $full : $large;
+kernel &run(
+    align 8  kernarg_u64 %_arg0, 
+    align 8  kernarg_u64 %_arg1, 
+    align 8  kernarg_u64 %_arg2, 
+    align 8  kernarg_s32 %_arg3
+   ){
+         ld_kernarg_u64 $d0, [%_arg0];
+         ld_kernarg_u64 $d1, [%_arg1];
+         ld_kernarg_u64 $d2, [%_arg2];
+         ld_kernarg_s32 $s3, [%_arg3];
+         workitemabsid_s32 $s4, 0;
+
+ // 0000_0000 aload_0  var#0(oref_0 [F)
+         add_s32 $s3, $s3, $s4;
+         mov_b64 $d4, $d0;
+
+ // 0000_0001 iload_3  var#3(i_3 I)
+         mov_b32 $s5, $s3;
+
+ // 0000_0002 aload_1  var#1(oref_1 [F)
+         mov_b64 $d6, $d1;
+
+ // 0000_0003 iload_3  var#3(i_3 I)
+         mov_b32 $s7, $s3;
+
+ // 0000_0004 faload  
+         cvt_u64_s32 $d7, $s7;
+         mad_u64 $d7, $d7, 4, $d6;
+         ld_global_f32 $s6, [$d7+24];
+
+ // 0000_0005 aload_2  var#2(oref_2 [F)
+         mov_b64 $d7, $d2;
+
+ // 0000_0006 iload_3  var#3(i_3 I)
+         mov_b32 $s8, $s3;
+
+ // 0000_0007 faload  
+         cvt_u64_s32 $d8, $s8;
+         mad_u64 $d8, $d8, 4, $d7;
+         ld_global_f32 $s7, [$d8+24];
+
+ // 0000_0008 fadd    
+         add_f32 $s6, $s6, $s7;
+
+ // 0000_0009 fastore 
+         cvt_u64_s32 $d5, $s5;
+         mad_u64 $d5, $d5, 4, $d4;
+         st_global_f32 $s6, [$d5+24];
+
+ // 0000_0010 return  
+         ret;
+};
+/*
+0000={
+     0000 -> com.amd.aparapi.sample.add.HSAAdd.lambda$main$0([F[F[FI)V
+}
+
+*/
+ HSA Using Time:0.317sec
+It took 423295316 nanoseconds

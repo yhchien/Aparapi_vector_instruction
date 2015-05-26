@@ -1,0 +1,75 @@
+APARAPI_HOME:/home/hsaserver/aparapi-lambda
+ANT_HOME:/usr/share/ant
+APARAPI_JNI_HOME:
+APARAPI_JAR_HOME:
+JAVA_HOME:/home/hsaserver/jdk1.8.0_20
+OCL_LIB:/home/hsaserver/AMD-APP-SDK-v2.9-RC-lnx64/lib/x86_64
+OCL_INCLUDE:/home/hsaserver/AMD-APP-SDK-v2.9-RC-lnx64/include
+OKRA_HOME:/home/hsaserver/Okra-Interface-to-HSA-Device/okra
+PATH:/home/hsaserver/jdk1.8.0_20/bin:/usr/share/ant/bin:/home/hsaserver/Okra-Interface-to-HSA-Device/okra/dist/bin:/home/hsaserver/Okra-Interface-to-HSA-Device/okra/hsa/bin/x86_64://home/hsaserver/jdk1.8.0_20//bin:/home/hsaserver/okra-Interface-to-HSA-Device/okra/dist/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
+LD_LIBRARY_PATH:/home/hsaserver/Okra-Interface-to-HSA-Device/okra/dist/bin:/home/hsaserver/Okra-Interface-to-HSA-Device/okra/hsa/bin/x86_64:/home/hsaserver/AMD-APP-SDK-v2.9-RC-lnx64/lib/x86_64::/opt/AMDAPP/lib/x86_64:/opt/AMDAPP/lib/x86:/home/hsaserver/Okra-Interface-to-HSA-Device/okra/dist/bin
+LIB_ARCH:x86_64
+LIB_SUFFIX:so
+LIB_PREFIX:lib
+APARAPI_AGENT_NAME=libaparapi_x86_64.so
+HSA_RUNTIME:1
+JVM_OPTS: -Xmx2G -XX:-UseCompressedOops -agentpath:/home/hsaserver/aparapi-lambda/com.amd.aparapi.jni/dist/libaparapi_x86_64.so -Djava.library.path=/home/hsaserver/Okra-Interface-to-HSA-Device/okra/dist/bin:/home/hsaserver/Okra-Interface-to-HSA-Device/okra/hsa/bin/x86_64
+JARS::/home/hsaserver/aparapi-lambda/com.amd.aparapi/dist/aparapi.jar:/home/hsaserver/Okra-Interface-to-HSA-Device/okra/dist/okra.jar
+version 0:95: $full : $large;
+kernel &run(
+    align 8  kernarg_u64 %_arg0, 
+    align 8  kernarg_u64 %_arg1, 
+    align 8  kernarg_s32 %_arg2
+   ){
+         ld_kernarg_u64 $d0, [%_arg0];
+         ld_kernarg_u64 $d1, [%_arg1];
+         ld_kernarg_s32 $s2, [%_arg2];
+         workitemabsid_s32 $s3, 0;
+
+ // 0000_0000 aload_0  var#0(oref_0 [F)
+         add_s32 $s2, $s2, $s3;
+         mov_b64 $d3, $d0;
+
+ // 0000_0001 iload_2  var#2(i_2 I)
+         mov_b32 $s4, $s2;
+
+ // 0000_0002 aload_1  var#1(oref_1 [F)
+         mov_b64 $d5, $d1;
+
+ // 0000_0003 iload_2  var#2(i_2 I)
+         mov_b32 $s6, $s2;
+
+ // 0000_0004 faload  
+         cvt_u64_s32 $d6, $s6;
+         mad_u64 $d6, $d6, 4, $d5;
+         ld_global_f32 $s5, [$d6+24];
+
+ // 0000_0005 aload_1  var#1(oref_1 [F)
+         mov_b64 $d6, $d1;
+
+ // 0000_0006 iload_2  var#2(i_2 I)
+         mov_b32 $s7, $s2;
+
+ // 0000_0007 faload  
+         cvt_u64_s32 $d7, $s7;
+         mad_u64 $d7, $d7, 4, $d6;
+         ld_global_f32 $s6, [$d7+24];
+
+ // 0000_0008 fmul    
+         mul_f32 $s5, $s5, $s6;
+
+ // 0000_0009 fastore 
+         cvt_u64_s32 $d4, $s4;
+         mad_u64 $d4, $d4, 4, $d3;
+         st_global_f32 $s5, [$d4+24];
+
+ // 0000_0010 return  
+         ret;
+};
+/*
+0000={
+     0000 -> com.amd.aparapi.sample.squares.HSASquares.lambda$main$1([F[FI)V
+}
+
+*/
+ HSA Using Time:0.256sec

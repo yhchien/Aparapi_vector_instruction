@@ -1,0 +1,192 @@
+ Datasize is1000
+Return Value : true
+version 0:95: $full : $large;
+kernel &run(
+    align 8  kernarg_u64 %_arg0, 
+    align 8  kernarg_u64 %_arg1, 
+    align 8  kernarg_u64 %_arg2, 
+    align 8  kernarg_u64 %_arg3, 
+    align 8  kernarg_s32 %_arg4
+   ){
+         ld_kernarg_u64 $d0, [%_arg0];
+         ld_kernarg_u64 $d1, [%_arg1];
+         ld_kernarg_u64 $d2, [%_arg2];
+         ld_kernarg_u64 $d3, [%_arg3];
+         ld_kernarg_s32 $s4, [%_arg4];
+         workitemabsid_s32 $s5, 0;
+
+ // 0000_0000 aload_0  var#0(oref_0 [Lcom/amd/aparapi/sample/Vector/Float4;)
+         add_s32 $s4, $s4, $s5;
+         mov_b64 $d5, $d0;
+
+ // 0000_0001 iload    var#4(i_4 I)
+         mov_b32 $s6, $s4;
+
+ // 0000_0003 aload_1  var#1(oref_1 [Lcom/amd/aparapi/sample/Vector/Float4;)
+         mov_b64 $d7, $d1;
+
+ // 0000_0004 iload    var#4(i_4 I)
+         mov_b32 $s8, $s4;
+
+ // 0000_0006 aaload  
+         cvt_u64_s32 $d8, $s8;
+         mad_u64 $d8, $d8, 8, $d7;
+         ld_global_u64 $d7, [$d8+24];
+
+ // 0000_0007 pop     
+         
+
+ // 0000_0008 aload_2  var#2(oref_2 [Lcom/amd/aparapi/sample/Vector/Float4;)
+         mov_b64 $d7, $d2;
+
+ // 0000_0009 iload    var#4(i_4 I)
+         mov_b32 $s8, $s4;
+
+ // 0000_0011 aaload  
+         cvt_u64_s32 $d8, $s8;
+         mad_u64 $d8, $d8, 8, $d7;
+         ld_global_u64 $d7, [$d8+24];
+
+ // 0000_0012 aload_3  var#3(oref_3 [Lcom/amd/aparapi/sample/Vector/Float4;)
+         mov_b64 $d8, $d3;
+
+ // 0000_0013 iload    var#4(i_4 I)
+         mov_b32 $s9, $s4;
+
+ // 0000_0015 aaload  
+         cvt_u64_s32 $d9, $s9;
+         mad_u64 $d9, $d9, 8, $d8;
+         ld_global_u64 $d8, [$d9+24];
+
+ // 0000_0016 aload_1  var#1(oref_1 [Lcom/amd/aparapi/sample/Vector/Float4;)
+         mov_b64 $d9, $d1;
+
+ // 0000_0017 iload    var#4(i_4 I)
+         mov_b32 $s10, $s4;
+
+ // 0000_0019 aaload  
+         cvt_u64_s32 $d10, $s10;
+         mad_u64 $d10, $d10, 8, $d9;
+         ld_global_u64 $d9, [$d10+24];
+
+ // 0001_0000 aload_2  var#2(oref_2 Lcom/amd/aparapi/sample/Vector/Float4;)
+         mov_b64 $d10, $d9;
+
+ // 0001_0001 aload_0  var#0(oref_0 Lcom/amd/aparapi/sample/Vector/Float4;)
+         mov_b64 $d11, $d7;
+
+ // 0001_0002 getfield F com.amd.aparapi.sample.Vector.Float4 x
+         ld_global_f32 $s11, [$d11+16];
+
+ // 0001_0005 aload_1  var#1(oref_1 Lcom/amd/aparapi/sample/Vector/Float4;)
+         mov_b64 $d12, $d8;
+
+ // 0001_0006 getfield F com.amd.aparapi.sample.Vector.Float4 x
+         ld_global_f32 $s12, [$d12+16];
+
+ // 0001_0009 fadd    
+         add_f32 $s11, $s11, $s12;
+
+ // 0001_0010 putfield F com.amd.aparapi.sample.Vector.Float4 x
+         st_global_f32 $s11, [$d10+16];
+
+ // 0001_0013 aload_2  var#2(oref_2 Lcom/amd/aparapi/sample/Vector/Float4;)
+         mov_b64 $d10, $d9;
+
+ // 0001_0014 aload_0  var#0(oref_0 Lcom/amd/aparapi/sample/Vector/Float4;)
+         mov_b64 $d11, $d7;
+
+ // 0001_0015 getfield F com.amd.aparapi.sample.Vector.Float4 y
+         ld_global_f32 $s11, [$d11+20];
+
+ // 0001_0018 aload_1  var#1(oref_1 Lcom/amd/aparapi/sample/Vector/Float4;)
+         mov_b64 $d12, $d8;
+
+ // 0001_0019 getfield F com.amd.aparapi.sample.Vector.Float4 y
+         ld_global_f32 $s12, [$d12+20];
+
+ // 0001_0022 fadd    
+         add_f32 $s11, $s11, $s12;
+
+ // 0001_0023 putfield F com.amd.aparapi.sample.Vector.Float4 y
+         st_global_f32 $s11, [$d10+20];
+
+ // 0001_0026 aload_2  var#2(oref_2 Lcom/amd/aparapi/sample/Vector/Float4;)
+         mov_b64 $d10, $d9;
+
+ // 0001_0027 aload_0  var#0(oref_0 Lcom/amd/aparapi/sample/Vector/Float4;)
+         mov_b64 $d11, $d7;
+
+ // 0001_0028 getfield F com.amd.aparapi.sample.Vector.Float4 z
+         ld_global_f32 $s11, [$d11+24];
+
+ // 0001_0031 aload_1  var#1(oref_1 Lcom/amd/aparapi/sample/Vector/Float4;)
+         mov_b64 $d12, $d8;
+
+ // 0001_0032 getfield F com.amd.aparapi.sample.Vector.Float4 z
+         ld_global_f32 $s12, [$d12+24];
+
+ // 0001_0035 fadd    
+         add_f32 $s11, $s11, $s12;
+
+ // 0001_0036 putfield F com.amd.aparapi.sample.Vector.Float4 z
+         st_global_f32 $s11, [$d10+24];
+
+ // 0001_0039 aload_2  var#2(oref_2 Lcom/amd/aparapi/sample/Vector/Float4;)
+         mov_b64 $d10, $d9;
+
+ // 0001_0040 aload_0  var#0(oref_0 Lcom/amd/aparapi/sample/Vector/Float4;)
+         mov_b64 $d11, $d7;
+
+ // 0001_0041 getfield F com.amd.aparapi.sample.Vector.Float4 w
+         ld_global_f32 $s11, [$d11+28];
+
+ // 0001_0044 aload_1  var#1(oref_1 Lcom/amd/aparapi/sample/Vector/Float4;)
+         mov_b64 $d12, $d8;
+
+ // 0001_0045 getfield F com.amd.aparapi.sample.Vector.Float4 w
+         ld_global_f32 $s12, [$d12+28];
+
+ // 0001_0048 fadd    
+         add_f32 $s11, $s11, $s12;
+
+ // 0001_0049 putfield F com.amd.aparapi.sample.Vector.Float4 w
+         st_global_f32 $s11, [$d10+28];
+
+ // 0001_0052 aload_2  var#2(oref_2 Lcom/amd/aparapi/sample/Vector/Float4;)
+         mov_b64 $d10, $d9;
+
+ // 0001_0053 areturn 
+         mov_b64 $d7, $d10;
+
+ // 0000_0023 aastore 
+         cvt_u64_s32 $d6, $s6;
+         mad_u64 $d6, $d6, 8, $d5;
+         st_global_u64 $d7, [$d6+24];
+
+ // 0000_0024 return  
+         ret;
+};
+/*
+0000={
+     0000 -> com.amd.aparapi.sample.Vector.VecADD.lambda$main$0([Lcom/amd/aparapi/sample/Vector/Float4;[Lcom/amd/aparapi/sample/Vector/Float4;[Lcom/amd/aparapi/sample/Vector/Float4;[Lcom/amd/aparapi/sample/Vector/Float4;I)V
+}
+
+0001={
+     0000 -> com.amd.aparapi.sample.Vector.VecADD.lambda$main$0([Lcom/amd/aparapi/sample/Vector/Float4;[Lcom/amd/aparapi/sample/Vector/Float4;[Lcom/amd/aparapi/sample/Vector/Float4;[Lcom/amd/aparapi/sample/Vector/Float4;I)V
+     0020 -> com.amd.aparapi.sample.Vector.Float4.Vecadd(Lcom/amd/aparapi/sample/Vector/Float4;Lcom/amd/aparapi/sample/Vector/Float4;Lcom/amd/aparapi/sample/Vector/Float4;)Lcom/amd/aparapi/sample/Vector/Float4;
+}
+
+*/
+0.0
+2.0
+4.0
+6.0
+8.0
+10.0
+12.0
+14.0
+16.0
+18.0
+ HSA Using Time:0.269sec
+It took 358357549 nanoseconds

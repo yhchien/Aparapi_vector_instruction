@@ -1,0 +1,204 @@
+APARAPI_HOME:/home/hsaserver/aparapi-lambda
+ANT_HOME:/usr/share/ant
+APARAPI_JNI_HOME:
+APARAPI_JAR_HOME:
+JAVA_HOME:/home/hsaserver/jdk1.8.0_20
+OCL_LIB:/home/hsaserver/AMD-APP-SDK-v2.9-RC-lnx64/lib/x86_64
+OCL_INCLUDE:/home/hsaserver/AMD-APP-SDK-v2.9-RC-lnx64/include
+OKRA_HOME:/home/hsaserver/Okra-Interface-to-HSA-Device/okra
+PATH:/home/hsaserver/jdk1.8.0_20/bin:/usr/share/ant/bin:/home/hsaserver/Okra-Interface-to-HSA-Device/okra/dist/bin:/home/hsaserver/Okra-Interface-to-HSA-Device/okra/hsa/bin/x86_64://home/hsaserver/jdk1.8.0_20//bin:/home/hsaserver/okra-Interface-to-HSA-Device/okra/dist/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
+LD_LIBRARY_PATH:/home/hsaserver/Okra-Interface-to-HSA-Device/okra/dist/bin:/home/hsaserver/Okra-Interface-to-HSA-Device/okra/hsa/bin/x86_64:/home/hsaserver/AMD-APP-SDK-v2.9-RC-lnx64/lib/x86_64::/opt/AMDAPP/lib/x86_64:/opt/AMDAPP/lib/x86:/home/hsaserver/Okra-Interface-to-HSA-Device/okra/dist/bin
+LIB_ARCH:x86_64
+LIB_SUFFIX:so
+LIB_PREFIX:lib
+APARAPI_AGENT_NAME=libaparapi_x86_64.so
+HSA_RUNTIME:1
+JVM_OPTS: -Xmx2G -XX:-UseCompressedOops -agentpath:/home/hsaserver/aparapi-lambda/com.amd.aparapi.jni/dist/libaparapi_x86_64.so -Djava.library.path=/home/hsaserver/Okra-Interface-to-HSA-Device/okra/dist/bin:/home/hsaserver/Okra-Interface-to-HSA-Device/okra/hsa/bin/x86_64
+JARS::/home/hsaserver/aparapi-lambda/com.amd.aparapi/dist/aparapi.jar:/home/hsaserver/Okra-Interface-to-HSA-Device/okra/dist/okra.jar
+Width 640!!
+Height 640!!
+version 0:95: $full : $large;
+kernel &run(
+    align 8  kernarg_u64 %_arg0, 
+    align 8  kernarg_u64 %_arg1, 
+    align 8  kernarg_s32 %_arg2
+   ){
+         ld_kernarg_u64 $d0, [%_arg0];
+         ld_kernarg_u64 $d1, [%_arg1];
+         ld_kernarg_s32 $s2, [%_arg2];
+         workitemabsid_s32 $s3, 0;
+
+ // 0000_0000 iconst_0.0
+         add_s32 $s2, $s2, $s3;
+         mov_b32 $s4, 0;
+
+ // 0000_0001 istore_3 var#3(i_3 ref type)
+         mov_b32 $s3, $s4;
+@L0000_0002:
+ // 0000_0002 iload_3  var#3(i_3 ref type)
+         mov_b32 $s4, $s3;
+
+ // 0000_0003 aload_0  var#0(oref_0 Lcom/amd/aparapi/sample/kmeans/MainHSAIL$KmeansKernel;)
+         mov_b64 $d5, $d0;
+
+ // 0000_0004 getfield I com.amd.aparapi.sample.kmeans.MainHSAIL$KmeansKernel K
+         ld_global_s32 $s5, [$d5+24];
+
+ // 0000_0007 if_icmpge 71
+         cmp_ge_b1_s32 $c1, $s4, $s5;
+         cbr $c1, @L0000_0071;
+
+ // 0000_0010 aload_0  var#0(oref_0 Lcom/amd/aparapi/sample/kmeans/MainHSAIL$KmeansKernel;)
+         mov_b64 $d4, $d0;
+
+ // 0000_0011 getfield [I com.amd.aparapi.sample.kmeans.MainHSAIL$KmeansKernel best_map
+         ld_global_u64 $d4, [$d4+72];
+
+ // 0000_0014 iload_2  var#2(i_2 I)
+         mov_b32 $s5, $s2;
+
+ // 0000_0015 iaload  
+         cvt_u64_s32 $d5, $s5;
+         mad_u64 $d5, $d5, 4, $d4;
+         ld_global_s32 $s4, [$d5+24];
+
+ // 0000_0016 iload_3  var#3(i_3 ref type)
+         mov_b32 $s5, $s3;
+
+ // 0000_0017 if_icmpne 65
+         cmp_ne_b1_s32 $c1, $s4, $s5;
+         cbr $c1, @L0000_0065;
+
+ // 0000_0020 aload_1  var#1(oref_1 [I)
+         mov_b64 $d4, $d1;
+
+ // 0000_0021 iload_2  var#2(i_2 I)
+         mov_b32 $s5, $s2;
+
+ // 0000_0022 ldc     .-16777216
+         mov_b32 $s6, -16777216;
+
+ // 0000_0024 aload_0  var#0(oref_0 Lcom/amd/aparapi/sample/kmeans/MainHSAIL$KmeansKernel;)
+         mov_b64 $d7, $d0;
+
+ // 0000_0025 getfield [F com.amd.aparapi.sample.kmeans.MainHSAIL$KmeansKernel best_center
+         ld_global_u64 $d7, [$d7+56];
+
+ // 0000_0028 iload_3  var#3(i_3 ref type)
+         mov_b32 $s8, $s3;
+
+ // 0000_0029 iconst_3.3
+         mov_b32 $s9, 3;
+
+ // 0000_0030 imul    
+         mul_s32 $s8, $s8, $s9;
+
+ // 0000_0031 faload  
+         cvt_u64_s32 $d8, $s8;
+         mad_u64 $d8, $d8, 4, $d7;
+         ld_global_f32 $s7, [$d8+24];
+
+ // 0000_0032 f2i     
+         cvt_s32_f32 $s7, $s7;
+
+ // 0000_0033 bipush  .16
+         mov_b32 $s8, 16;
+
+ // 0000_0035 ishl    
+         shl_s32 $s7, $s7, $s8;
+
+ // 0000_0036 ior     
+         or_b32 $s6, $s6, $s7;
+
+ // 0000_0037 aload_0  var#0(oref_0 Lcom/amd/aparapi/sample/kmeans/MainHSAIL$KmeansKernel;)
+         mov_b64 $d7, $d0;
+
+ // 0000_0038 getfield [F com.amd.aparapi.sample.kmeans.MainHSAIL$KmeansKernel best_center
+         ld_global_u64 $d7, [$d7+56];
+
+ // 0000_0041 iload_3  var#3(i_3 ref type)
+         mov_b32 $s8, $s3;
+
+ // 0000_0042 iconst_3.3
+         mov_b32 $s9, 3;
+
+ // 0000_0043 imul    
+         mul_s32 $s8, $s8, $s9;
+
+ // 0000_0044 iconst_1.1
+         mov_b32 $s9, 1;
+
+ // 0000_0045 iadd    
+         add_s32 $s8, $s8, $s9;
+
+ // 0000_0046 faload  
+         cvt_u64_s32 $d8, $s8;
+         mad_u64 $d8, $d8, 4, $d7;
+         ld_global_f32 $s7, [$d8+24];
+
+ // 0000_0047 f2i     
+         cvt_s32_f32 $s7, $s7;
+
+ // 0000_0048 bipush  .8
+         mov_b32 $s8, 8;
+
+ // 0000_0050 ishl    
+         shl_s32 $s7, $s7, $s8;
+
+ // 0000_0051 ior     
+         or_b32 $s6, $s6, $s7;
+
+ // 0000_0052 aload_0  var#0(oref_0 Lcom/amd/aparapi/sample/kmeans/MainHSAIL$KmeansKernel;)
+         mov_b64 $d7, $d0;
+
+ // 0000_0053 getfield [F com.amd.aparapi.sample.kmeans.MainHSAIL$KmeansKernel best_center
+         ld_global_u64 $d7, [$d7+56];
+
+ // 0000_0056 iload_3  var#3(i_3 ref type)
+         mov_b32 $s8, $s3;
+
+ // 0000_0057 iconst_3.3
+         mov_b32 $s9, 3;
+
+ // 0000_0058 imul    
+         mul_s32 $s8, $s8, $s9;
+
+ // 0000_0059 iconst_2.2
+         mov_b32 $s9, 2;
+
+ // 0000_0060 iadd    
+         add_s32 $s8, $s8, $s9;
+
+ // 0000_0061 faload  
+         cvt_u64_s32 $d8, $s8;
+         mad_u64 $d8, $d8, 4, $d7;
+         ld_global_f32 $s7, [$d8+24];
+
+ // 0000_0062 f2i     
+         cvt_s32_f32 $s7, $s7;
+
+ // 0000_0063 ior     
+         or_b32 $s6, $s6, $s7;
+
+ // 0000_0064 iastore 
+         cvt_u64_s32 $d5, $s5;
+         mad_u64 $d5, $d5, 4, $d4;
+         st_global_s32 $s6, [$d5+24];
+@L0000_0065:
+ // 0000_0065 iinc     var#3(i_3 ref type)
+         add_s32 $s3, $s3, 1;
+
+ // 0000_0068 goto     2
+         brn @L0000_0002;
+@L0000_0071:
+ // 0000_0071 return  
+         ret;
+};
+/*
+0000={
+     0000 -> com.amd.aparapi.sample.kmeans.MainHSAIL$KmeansKernel.lambda$Kmeanscomputation$1([II)V
+}
+
+*/
+3.4028235E38,0.0
+Using Time:19.828sec
